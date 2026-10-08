@@ -1,9 +1,12 @@
 
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'criar_partida.dart';
 import 'jogar_page.dart';
 import 'lista_partidas.dart';
+import 'login_page.dart';
 
 class HomePage extends StatefulWidget {
   final String nomeJogador;
@@ -68,6 +71,33 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  Future<void> sairDaConta() async {
+    try {
+      await FirebaseAuth.instance.signOut();
+
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove('nome');
+
+      if (!mounted) return;
+
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const LoginPage(),
+        ),
+        (route) => false,
+      );
+    } catch (erro) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Erro ao sair da conta: $erro'),
+        ),
+      );
+    }
+  }
+
   @override
   void dispose() {
     codigoController.dispose();
@@ -79,6 +109,13 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Quem Sou Eu?'),
+        actions: [
+          IconButton(
+            onPressed: sairDaConta,
+            icon: const Icon(Icons.logout),
+            tooltip: 'Sair da conta',
+          ),
+        ],
       ),
       body: Center(
         child: SingleChildScrollView(
