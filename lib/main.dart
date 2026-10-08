@@ -10,6 +10,7 @@ import 'home_page.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // Inicializa o Firebase
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -20,17 +21,20 @@ void main() async {
 class App extends StatelessWidget {
   const App({super.key});
 
+
   Future<String?> verificarLogin() async {
-    // Verifica se existe um usuário autenticado
     User? usuario = FirebaseAuth.instance.currentUser;
 
     if (usuario == null) {
       return null;
     }
 
-    // Recupera o nome salvo no SharedPreferences
     final prefs = await SharedPreferences.getInstance();
     String? nome = prefs.getString('nome');
+
+    if (nome == null || nome.isEmpty) {
+      nome = usuario.email ?? 'Jogador';
+    }
 
     return nome;
   }
@@ -45,10 +49,11 @@ class App extends StatelessWidget {
           seedColor: Colors.deepPurple,
         ),
       ),
+
       home: FutureBuilder<String?>(
         future: verificarLogin(),
         builder: (context, snapshot) {
-          // Enquanto verifica o login
+
           if (snapshot.connectionState ==
               ConnectionState.waiting) {
             return const Scaffold(
@@ -58,14 +63,12 @@ class App extends StatelessWidget {
             );
           }
 
-          // Se não estiver logado ou não tiver nome salvo
           if (snapshot.hasError ||
               snapshot.data == null ||
               snapshot.data!.isEmpty) {
             return const LoginPage();
           }
 
-          // Se estiver logado, abre a página inicial
           return HomePage(
             nomeJogador: snapshot.data!,
           );
