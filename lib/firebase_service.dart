@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class FirebaseService {
   final FirebaseFirestore db = FirebaseFirestore.instance;
 
-  // CRIAR PARTIDA
   Future<String> criarPartida(
     String jogador,
     String personagem,
@@ -23,7 +22,6 @@ class FirebaseService {
     return partida.id;
   }
 
-  // ENTRAR EM UMA PARTIDA
   Future<void> entrarPartida(
     String id,
     String jogador,
@@ -34,18 +32,15 @@ class FirebaseService {
     });
   }
 
-  // ENVIAR PERGUNTA
   Future<void> enviarPergunta(
     String id,
     String pergunta,
   ) async {
-    // Atualiza a pergunta atual
     await db.collection('partidas').doc(id).update({
       'pergunta': pergunta,
       'resposta': '',
     });
 
-    // Salva a pergunta na subcoleção
     await db
         .collection('partidas')
         .doc(id)
@@ -56,7 +51,7 @@ class FirebaseService {
     });
   }
 
-  // RESPONDER SIM OU NÃO
+ 
   Future<void> responder(
     String id,
     String resposta,
@@ -66,7 +61,6 @@ class FirebaseService {
     });
   }
 
-  // TENTAR ADIVINHAR
   Future<bool> tentarAdivinhar(
     String id,
     String palpite,
@@ -95,7 +89,6 @@ class FirebaseService {
     return acertou;
   }
 
-  // OUVIR ALTERAÇÕES DA PARTIDA
   Stream<DocumentSnapshot> ouvirPartida(String id) {
     return db
         .collection('partidas')
@@ -103,7 +96,7 @@ class FirebaseService {
         .snapshots();
   }
 
-  // FILTRO 1 - PARTIDAS AGUARDANDO
+  // FILTROS
   Stream<QuerySnapshot> partidasAguardando() {
     return db
         .collection('partidas')
@@ -111,7 +104,6 @@ class FirebaseService {
         .snapshots();
   }
 
-  // FILTRO 2 - PARTIDAS FINALIZADAS
   Stream<QuerySnapshot> partidasFinalizadas() {
     return db
         .collection('partidas')
