@@ -32,7 +32,6 @@ class _LoginPageState extends State<LoginPage> {
         password: senha,
       );
 
-      // SharedPreferences
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('nome', nome);
 
@@ -117,7 +116,6 @@ class _LoginPageState extends State<LoginPage> {
 
                 const SizedBox(height: 40),
 
-                // NOME
                 TextField(
                   controller: nomeController,
                   decoration: const InputDecoration(
@@ -128,7 +126,6 @@ class _LoginPageState extends State<LoginPage> {
 
                 const SizedBox(height: 15),
 
-                // E-MAIL
                 TextField(
                   controller: emailController,
                   decoration: const InputDecoration(
@@ -139,7 +136,6 @@ class _LoginPageState extends State<LoginPage> {
 
                 const SizedBox(height: 15),
 
-                // SENHA
                 TextField(
                   controller: senhaController,
                   obscureText: true,
@@ -151,7 +147,6 @@ class _LoginPageState extends State<LoginPage> {
 
                 const SizedBox(height: 20),
 
-                // ENTRAR
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
@@ -162,7 +157,6 @@ class _LoginPageState extends State<LoginPage> {
 
                 const SizedBox(height: 10),
 
-                // CRIAR CONTA
                 SizedBox(
                   width: double.infinity,
                   child: OutlinedButton(
